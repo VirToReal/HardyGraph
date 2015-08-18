@@ -24,7 +24,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // - ANSONSTEN -> Alle Positionen die mit //TODO gekennzeichnet sind 
 
 
-$fn = 80; //Shole Resulution of the Models
+
+$fn = 80; //Whole Resolution of the Models
 use <Thread_Library.scad> //Import a Thread-Thread_Library // Only needed for Dremel Holder
 
 //Modifieable
