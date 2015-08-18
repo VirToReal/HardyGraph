@@ -1,5 +1,5 @@
 /*
-HardyGraph - Dynamical and Readjustable Frame to build an Engraver
+HardyGraph - Dynamical and Readjustable Frame to build an Engraver or 3-D Printer (no Extruder for now)
 Copyright (C) 2014  Benjamin Hirmer - hardy at virtoreal.net
 
 This program is free software: you can redistribute it and/or modify
