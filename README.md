@@ -1,5 +1,5 @@
 # HardyGraph
-Wide Load fully printed 3D-Printer
+Dynamical generated and fully printed 3D-Printer
 
 This is my Project for dynamical printing a Portal-Printer with OpenScad and a possible reachable Workspace Area of 360x600x270mm (X/Y/Z). But this is just my Print (i simply don’t know how far you can get). It has a option for mounting some Auto-Bed-Leveling equipment (also in HardyGraph.scad File), then you might able for levelling the bed with Marlin or some other Firmware. 
 
