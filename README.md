@@ -11,3 +11,4 @@ You will need the OpenSource CAD-Programmer-Tool OpenScad -> http://www.openscad
 (i made this .scad File with OpenSCAD version 2014.01.29)
 
 Check the GitHub Wiki for more Information: https://github.com/HardRainbow/HardyGraph/wiki
+Or the RepRap Community: http://reprap.org/wiki/HardyGraph
