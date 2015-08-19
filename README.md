@@ -10,5 +10,5 @@ There is no Extruder at the moment because i use it for commercially selling eng
 You will need the OpenSource CAD-Programmer-Tool OpenScad -> http://www.openscad.org/
 (i made this .scad File with OpenSCAD version 2014.01.29)
 
-Check the GitHub Wiki for more Information: https://github.com/HardRainbow/HardyGraph/wiki
-Or the RepRap Community: http://reprap.org/wiki/HardyGraph
+* Check the GitHub Wiki for more Information: https://github.com/HardRainbow/HardyGraph/wiki
+* Or the RepRap Community: http://reprap.org/wiki/HardyGraph
