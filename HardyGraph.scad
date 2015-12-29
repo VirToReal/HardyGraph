@@ -1,5 +1,5 @@
 /*
-HardyGraph - Dynamical and Readjustable Frame to build an Engraver or 3-D Printer (no Extruder for now)
+HardyGraph - Dynamical and Readjustable Frame to build an Engraver
 Copyright (C) 2014  Benjamin Hirmer - hardy at virtoreal.net
 
 This program is free software: you can redistribute it and/or modify
@@ -24,14 +24,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // - ANSONSTEN -> Alle Positionen die mit //TODO gekennzeichnet sind 
 
 
-
 $fn = 80; //Whole Resolution of the Models
 use <Thread_Library.scad> //Import a Thread-Thread_Library // Only needed for Dremel Holder
 
 //Modifieable
 //Viewable Definition
   //Printmode (for Part-Export of Structure in STL e.c.t)
-  printmode = false;
+  printmode = true;
   usemembran = true; //Needed for Printing difficult Areas (Do not Print without this Function = true)
   membranthick = 1; //Thickness of the Membran-Layer (1 - recommended)
 
@@ -373,7 +372,7 @@ printzas1 = false; // Print Z-Axis Structure left (Print 1x (carefully, be sure 
 printzas2 = false; // Print Z-Axis Structure right (Print 1x (carefully, be sure Engines - off))
 printxas1 = false; // Print X-Axis Structure left (Print 1x (carefully, be sure Engines/Pulleys/Bearings - off, Membran - on))
 printxas2 = false; // Print X-Axis Structure right (Print 1x (carefully, be sure Engines/Pulleys/Bearings - off, Membran - on))
-printxcarrier = true; // Print X-Axis Tool-Carrier (Print 1x)
+printxcarrier = false; // Print X-Axis Tool-Carrier (Print 1x)
 printtightenery = false; // Print Y-Axis Belt-Tightener (Print 1x)
 printtightenerx = false; // Print X-Axis Belt-Tightener (Print 1x)
 printdremelh = false; // Print Dremel Holder (Print 1x for Engraving)
@@ -384,6 +383,11 @@ printdremelht = false; // Print Dremel Holder Test-Threads (3. Threads printdrem
 printpenh = false; // Print Pen Holder (Print 1x for Drawing)
   printpend = 10.4; // Pen Hole Diameter
   printpendh = 30; // Pen Dome Height
+printledh = true; // Print LED Holder (Print 1x for Lightening Workspace Area Values for ALUSTAR110 350ma 9008003)
+  printleda = 35; // Lightening Angle
+  printledsd = 26; // Mounting Screw Distance (between the two mounting holes)
+  printledhd = 2.7; // Mounting Screw Hole Diameter
+  printledra = -6; // Rearrange mounting Screws (+/-)
 printautoblvl = false; //Print Auto-Bed-Leveling Structure
 printufs1 = false; //Print Upper-Frame left (Print 1x)
 printufs2 = false; //Print Upper-Frame right (Print 1x)
@@ -973,6 +977,26 @@ printcc1 = false; //Print Cable Clamps 1 (on Nema-Engine) (Print 2x)
 	    }
 	  }
 	}
+      }
+    }
+    
+    //X-Axis Tool Carrier LED Holder / flip (bolean) arround x, rotate arround x, Servo-Width, Servo-Lenght, Servo-Lenght Widhout Screwholes, Servo-Flange Depht (Dept of Servo beneath the Mounting-Flange), Position of Drive-Shaft, Servo Structure Thickness, Servo Position Offset (Position of Servo-Engine beneath Tool-Carrier Surface), Diameter of Drive-Shaft (Width Tightener on Top), Distance of Servo Screws (from the Outside), Diameter of Servo Screw Holes (For Fix Servo), additional tools mounting plug size, additional tools mounting plug distance, additional tools mounting plug position from the outside, Trigger-Flag Lenght, Trigger-Flag Width, Trigger Width, Trigger Height, Trigger Mounting Holes Distance, Trigger Mounting Holes Size (For Fix Trigger), Trigger Mounting Holes Position from Pins, Angle of LED, LED Screw Distance, LED Scew Hole Diameter
+    module xtclh(flipx, rotate, sw, sl, slws, sfd, spos, sst, spo, sdods, sdoss, sdossh, atmps, atmpd, atmpp, tfl, tfw, tw, th, tmhd, tmhs, tmhpfp, ledangle, ledscrewdi, ledhd, ledra) {
+      mirror ([flipx,0,0]) rotate ([rotate,0,0]) {
+	  difference() { //LED Holder
+	    union() {
+	      translate ([-sfd,0,-spo]) cube (size = [atmpp+atmps*1.25+sfd,sl,sst+spo]); //Base Structure
+	    }
+	    union() {
+	      translate ([atmpp,(sl-atmpd)/2,-1]) cylinder (h = sst+2, r = atmps/2+0.5); //Screw Hole 1 Servo-Holder
+	      translate ([atmpp,(sl-atmpd)/2+atmpd,-1]) cylinder (h = sst+2, r = atmps/2+0.5); //Screw Hole 2 Servo-Holder
+	      translate ([0,-1,-spo-1]) cube (size = [atmpp+atmps*1.25+1,sl+2,spo+1]); //Cut-Out of Base
+	      translate ([-sfd,-1,-spo]) rotate([0,ledangle,0]) cube (size = [atmpp+atmps*1.25+1,sl+2,sw*2.5]); //Cut-Out of Engine
+	      translate ([1,sl/2+ledscrewdi/2,-spo-ledra]) rotate ([0,ledangle-90,0]) cylinder (h = sfd*2, r = ledhd/2); //Screw Hole 1 Servo-Engine
+	      translate ([1,sl/2-ledscrewdi/2,-spo-ledra]) rotate ([0,ledangle-90,0]) cylinder (h = sfd*2, r = ledhd/2); //Screw Hole 2 Servo-Engine
+	    }
+	  }
+	
       }
     }
   
@@ -1725,6 +1749,11 @@ if (printmode == false) { //Only if Printmode is OFF
     if (printautoblvl == true && printmode == true) {
       rotate ([0,180,0]) xtcsh(0, 0, xasw, xasl, xaslws, xasfd, xaspos, xasst, xaspo, xasdods, xasdoss, xasdossh, xaatmps, xaatmpd, xaatmpp, xatfl, xatfw, xatw, xath, xatmhd, xatmhs, xatmhpfp, 1); //Place Auto-Bed-Leveling Structure
       translate ([-xasl/2,0,xasfd*2-xasst]) rotate ([0,270,90]) xtcsh(0, 0, xasw, xasl, xaslws, xasfd, xaspos, xasst, xaspo, xasdods, xasdoss, xasdossh, xaatmps, xaatmpd, xaatmpp, xatfl, xatfw, xatw, xath, xatmhd, xatmhs, xatmhpfp, 2); //Place Auto-Bed-Leveling Flag
+    }
+    
+    //LED Holder
+    if (printledh == true && printmode == true) {
+      rotate ([0,180,0]) xtclh(0, 0, xasw, xasl, xaslws, xasfd, xaspos, xasst, xaspo, xasdods, xasdoss, xasdossh, xaatmps, xaatmpd, xaatmpp, xatfl, xatfw, xatw, xath, xatmhd, xatmhs, xatmhpfp, printleda, printledsd, printledhd, printledra); //Place LED-Holder Structure 
     }
     
     //Upper Frame Structure left
