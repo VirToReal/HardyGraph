@@ -30,11 +30,70 @@ use <Thread_Library.scad> //Import a Thread-Thread_Library // Only needed for Dr
 //Modifieable
 //Viewable Definition
   //Printmode (for Part-Export of Structure in STL e.c.t)
-  printmode = false;
+  printmode = true;
   usemembran = true; //Needed for Printing difficult Areas (Do not Print without this Function = true)
-  membranthick = 1; //Thickness of the Membran-Layer (1 - recommended)
+  membranthick = 1; //Thickness of the Membran-Layer 
+  
+  //Print Parts Logic - printmode = true; <-- is needed
+  //These Commands will be used outside of this File //TODO - Not ready jet
 
-  //Turn Structures ON/OFF
+  //Calibration Tool
+  printtestsizes = false; // Print Test-Sizes (Test Linear-Bearing/Smooth-Rod, Smooth-Rod Clamp, Threaded Rod Fitting, Nut-Trap)
+  printtestsizesh = 10; // Print Test-Sizes Hight
+  printtestsizesd = 10; // Print Test-Sizes Distances
+
+  // Turn following Structures = true to render each part separately / Ceep in Mind: printmode = true !!!
+  printgff = false; // Print Groundframe Feeds (Print 1x)
+  printgffd = 10; //Print Groundframe Feeds Distance (Distances between Feeds to Print)
+  printifc = false; // Print Inner-Frame Compounds (Print 1x)
+  printifcd = 10; //Print Inner-Frame Compound Distance (Distances between Compounds to Print)
+  printiff = false; // Print Inner-Frame Feeds (Print 1x)
+  printiffd = 30; //Print Inner-Frame Feeds Distance (Distances between Feeds to Print)
+  printyab = false; // Print Y-Axis Bearing Structure (Print 2x (carefully, be sure Bearings - off))
+  printyae1 = false; // Print Y-Axis Engine Structure left (Print 1x (carefully, be sure Engines - off))
+  printyae2 = false; // Print Y-Axis Engine Structure right (Print 1x (carefully, be sure Engines - off))
+  printzas1 = false; // Print Z-Axis Structure left (Print 1x (carefully, be sure Engines - off))
+  printzas2 = false; // Print Z-Axis Structure right (Print 1x (carefully, be sure Engines - off))
+  printxas1 = false; // Print X-Axis Structure left (Print 1x (carefully, be sure Engines/Pulleys/Bearings - off, Membran - on))
+  printxas2 = false; // Print X-Axis Structure right (Print 1x (carefully, be sure Engines/Pulleys/Bearings - off, Membran - on))
+  printxcarrier = false; // Print X-Axis Tool-Carrier (Print 1x)
+  printtightenery = false; // Print Y-Axis Belt-Tightener (Print 1x)
+  printtightenerx = false; // Print X-Axis Belt-Tightener (Print 1x)
+  printdremelh = false; // Print Dremel Holder (Print 1x for Engraving)
+    printdremelhp1 = 2.0; //Dremel Holder Thread-Pitch (Standard)
+  printdremelht = false; // Print Dremel Holder Test-Threads (3. Threads printdremelhp1/2/3) (Print 1x for Testing)
+    printdremelhp2 = 2.0; //Test Thread-Pitch 2
+    printdremelhp3 = 2.1; //Test Thread-Pitch 3
+  printpenh = false; // Print Pen Holder (Print 1x for Drawing)
+    printpend = 10.4; // Pen Hole Diameter
+    printpendh = 30; // Pen Dome Height
+  printledh = false; // Print LED Holder (Print 1x for Lightening Workspace Area Values for ALUSTAR110 350ma 9008003)
+    printleda = 35; // Lightening Angle
+    printledsd = 26; // Mounting Screw Distance (between the two mounting holes)
+    printledhd = 2.7; // Mounting Screw Hole Diameter
+    printledra = -6; // Rearrange mounting Screws (+/-)
+  printautoblvl = false; //Print Auto-Bed-Leveling Structure
+  printufs1 = false; //Print Upper-Frame left (Print 1x)
+  printufs2 = false; //Print Upper-Frame right (Print 1x)
+  printufbt = false; //Print Upper-Frame Belt Tightener (Print Methods on Display: true, false, all, slot) (Print 2x)
+  printufdp = false; //Print Upper-Frame Deflektion Pulley (Print 2x)
+  printufbs1 = false; //Print Upper-Frame bottom Structure (low) 1 (Print 1x)
+  printufbs2 = false; //Print Upper-Frame bottom Structure (low) 2 (Print 1x)
+  printufbs3 = false; //Print Upper-Frame bottom Structure (low) 3 (Print 1x)
+  printufbs4 = false; //Print Upper-Frame bottom Structure (low) 4 (Print 1x)
+  printufbs5 = false; //Print Upper-Frame bottom Structure (hight) 5 (Print 2x)
+  printufbs6 = false; //Print Upper-Frame bottom Structure (hight) 6 (Print 2x)
+  printufbses = false; //Print Upper-Frame bottom Emergency-Stop Structure (Print 2x, if Emergency-Stop needed)
+  printufb1 = false; //Print Upper-Frame Bracer 1 (Print 1x)
+  printufb2 = false; //Print Upper-Frame Bracer 2 (Print 2x)
+  printufb3 = true; //Print Upper-Frame Bracer 3 (Print 1x)
+  printufb4 = false; //Print Upper-Frame Bracer 4 (Print 1x)
+  printufb5 = false; //Print Upper-Frame Bracer Sideways 1 (Print 8x)
+  printcc1 = false; //Print Cable Clamps 1 (on Nema-Engine) (Print 2x)
+
+  // SIMULATION PARAMETER ( if printmode = false ) 
+  // Information: OpenScad may not show all Structures - if so -> 
+  //Turn Structures ON/OFF (take no effect in printmode = true)
   showtrod = true; //Show Threaded Rods
   showsrod = true; //Show Smooth Rods
   showbearing = true; //Show all Bearing
@@ -47,7 +106,7 @@ use <Thread_Library.scad> //Import a Thread-Thread_Library // Only needed for Dr
   showxtoolcarrier = true; //Show X Tool-Carrier
   showupperframe = true; //Show Upper-Frame Structures
   
-  //Siumulation Sizes
+  //Simulation Sizes (take no effect in printmode = true)
   //Size for simulated Pulley on X-Axis Engine
   spoxaw = 7; //Width
   spoxad = 15; //Diameter
@@ -59,13 +118,25 @@ use <Thread_Library.scad> //Import a Thread-Thread_Library // Only needed for Dr
   wess = 48; //Width for simulated Engine Single Shaft
     wesss = 24; //Shaft Lenght
   
-  //Simulation Parameter
+  //Simulation Parameter - virtual drive the Tool-Carrier (take no effect in printmode = true)
   drivex = 50; //Drive X (Value 0-100)
   drivey = 50; //Drive Y (Value 0-100)
   drivez = 50; //Drive Z (Value 0-100)
 
+// IMPORTANT ##########################
+// This upcoming Values take effect in your generated Structures, so choose correct values
 //Layout Y-Axis
-usetwosmoothrods = true;
+usetwosmoothrods = true; // Not not change at the moment ;-)
+
+//Workpiece Size
+wowp = 760; //Width of Workplace
+lowp = 460; //Length of Workplace
+howp = 304; //Height of Workplace
+
+//Workspace Mounting-Solutions
+wmss = 33; //Size of Mountingplates (on Top of the Inner-Frame)
+wmst = 6; //Height of Mountingplates (on Top of the Inner-Frame)
+wmsh = 6; //Diameter of the Hole in Mountingplates (4 Holes each Mountingplate)
 
 //Global Size Definitions
 dotr = 8; //Diameter of Threaded Rods of Groundframe
@@ -326,16 +397,6 @@ dbge = 8.5;//Distance Between Groundframe Feed for Engine-Structures
 	cccd = 10; // Cable Claps Cable Diameter
 	cczs = 4; // Cable Claps Zipper Size
 
-//Workpiece Size
-wowp = 760; //Width of Workplace
-lowp = 460; //Length of Workplace
-howp = 304; //Height of Workplace
-
-//Workspace Mounting-Solutions
-wmss = 33; //Size of Mountingplates (on Top of the Inner-Frame)
-wmst = 6; //Height of Mountingplates (on Top of the Inner-Frame)
-wmsh = 6; //Diameter of the Hole in Mountingplates (4 Holes each Mountingplate)
-
 //Define Automatic Variables
 
 //X-Axis - Adjust Belt-Tightener Height/Position to the Belt
@@ -347,65 +408,6 @@ xabspfto = (-(xawotc-xadbttsr-xawolbh)/2-xawobt/2)+(zasw-xammpt-xaamm-xawwt/2-(x
 
 //#################################################################
 //Dont touch Code below
-
-
-
-//Print Parts Logic
-//These Commands will be used outside of this File //TODO - Not ready jet
-
-//Calibration Tool
-printtestsizes = false; // Print Test-Sizes (Test Linear-Bearing/Smooth-Rod, Smooth-Rod Clamp, Threaded Rod Fitting, Nut-Trap)
-printtestsizesh = 10; // Print Test-Sizes Hight
-printtestsizesd = 10; // Print Test-Sizes Distances
-
-//HardyGraph 
-printgff = false; // Print Groundframe Feeds (Print 1x)
-printgffd = 10; //Print Groundframe Feeds Distance (Distances between Feeds to Print)
-printifc = false; // Print Inner-Frame Compounds (Print 1x)
-printifcd = 10; //Print Inner-Frame Compound Distance (Distances between Compounds to Print)
-printiff = false; // Print Inner-Frame Feeds (Print 1x)
-printiffd = 30; //Print Inner-Frame Feeds Distance (Distances between Feeds to Print)
-printyab = false; // Print Y-Axis Bearing Structure (Print 2x (carefully, be sure Bearings - off))
-printyae1 = false; // Print Y-Axis Engine Structure left (Print 1x (carefully, be sure Engines - off))
-printyae2 = false; // Print Y-Axis Engine Structure right (Print 1x (carefully, be sure Engines - off))
-printzas1 = false; // Print Z-Axis Structure left (Print 1x (carefully, be sure Engines - off))
-printzas2 = false; // Print Z-Axis Structure right (Print 1x (carefully, be sure Engines - off))
-printxas1 = false; // Print X-Axis Structure left (Print 1x (carefully, be sure Engines/Pulleys/Bearings - off, Membran - on))
-printxas2 = false; // Print X-Axis Structure right (Print 1x (carefully, be sure Engines/Pulleys/Bearings - off, Membran - on))
-printxcarrier = false; // Print X-Axis Tool-Carrier (Print 1x)
-printtightenery = false; // Print Y-Axis Belt-Tightener (Print 1x)
-printtightenerx = false; // Print X-Axis Belt-Tightener (Print 1x)
-printdremelh = false; // Print Dremel Holder (Print 1x for Engraving)
-  printdremelhp1 = 2.0; //Dremel Holder Thread-Pitch (Standard)
-printdremelht = false; // Print Dremel Holder Test-Threads (3. Threads printdremelhp1/2/3) (Print 1x for Testing)
-  printdremelhp2 = 2.0; //Test Thread-Pitch 2
-  printdremelhp3 = 2.1; //Test Thread-Pitch 3
-printpenh = false; // Print Pen Holder (Print 1x for Drawing)
-  printpend = 10.4; // Pen Hole Diameter
-  printpendh = 30; // Pen Dome Height
-printledh = true; // Print LED Holder (Print 1x for Lightening Workspace Area Values for ALUSTAR110 350ma 9008003)
-  printleda = 35; // Lightening Angle
-  printledsd = 26; // Mounting Screw Distance (between the two mounting holes)
-  printledhd = 2.7; // Mounting Screw Hole Diameter
-  printledra = -6; // Rearrange mounting Screws (+/-)
-printautoblvl = false; //Print Auto-Bed-Leveling Structure
-printufs1 = false; //Print Upper-Frame left (Print 1x)
-printufs2 = false; //Print Upper-Frame right (Print 1x)
-printufbt = false; //Print Upper-Frame Belt Tightener (Print Methods on Display: true, false, all, slot) (Print 2x)
-printufdp = false; //Print Upper-Frame Deflektion Pulley (Print 2x)
-printufbs1 = false; //Print Upper-Frame bottom Structure (low) 1 (Print 1x)
-printufbs2 = false; //Print Upper-Frame bottom Structure (low) 2 (Print 1x)
-printufbs3 = false; //Print Upper-Frame bottom Structure (low) 3 (Print 1x)
-printufbs4 = false; //Print Upper-Frame bottom Structure (low) 4 (Print 1x)
-printufbs5 = false; //Print Upper-Frame bottom Structure (hight) 5 (Print 2x)
-printufbs6 = false; //Print Upper-Frame bottom Structure (hight) 6 (Print 2x)
-printufbses = false; //Print Upper-Frame bottom Emergency-Stop Structure (Print 2x, if Emergency-Stop needed)
-printufb1 = false; //Print Upper-Frame Bracer 1 (Print 1x)
-printufb2 = false; //Print Upper-Frame Bracer 2 (Print 2x)
-printufb3 = false; //Print Upper-Frame Bracer 3 (Print 1x)
-printufb4 = false; //Print Upper-Frame Bracer 4 (Print 1x)
-printufb5 = false; //Print Upper-Frame Bracer Sideways 1 (Print 8x)
-printcc1 = false; //Print Cable Clamps 1 (on Nema-Engine) (Print 2x)
 
 //Define MODULE
     //Threaded Rod / length, rotationx, rotationy, rotationz
