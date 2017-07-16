@@ -2,6 +2,7 @@
 ## Dynamical generated and fully printed 3D-Printer
 ![OpenSCAD_Preview](https://github.com/VirToReal/HardyGraph/blob/master/Images/HardyGrav_OpenSCAD.png)
 ![Contructed](https://github.com/VirToReal/HardyGraph/blob/master/Images/HardyGraph_contructed.jpg)
+[![YouTube Video](https://img.youtube.com/vi/ZJUT9yClOmQ/0.jpg)](https://youtu.be/ZJUT9yClOmQ)
 
 ## Description
 This is my Project for dynamical printing a Portal-Printer with OpenScad and a possible reachable Workspace Area of 360x600x270mm (X/Y/Z). But this is just my Print (i simply don’t know how far you can get). It has a option for mounting some Auto-Bed-Leveling equipment (also in HardyGraph.scad File), then you might able for levelling the bed with Marlin or some other Firmware. 
