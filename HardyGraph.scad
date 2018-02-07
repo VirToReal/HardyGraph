@@ -17,6 +17,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 //#######TO-DO#######
+// Fehler:
+// - Printmode printifc unterscheidet nicht zwischen iffhw und iffhl im Printmode
+// - Printmode printiff threaded rods nicht auf alle structuren (iffc) aufgeteilt
+//
+// TODO:
 // - Automatische anpassung der auszublendenden "Lower Rod-Support Structure" im "Groundframe Y-Axis MotorMount" je nach Ausrichtung des Pulleys
 // - Der Druckbare Bereich wird nicht exakt bestimmt, sondern nur auf 97% geschätzt (bin zu faul)
 // - Die Upper-Frame Belt-Position wird nicht automatisch bestimmt, der Belt-Tightener dazu wird auch nicht ausgerichtet (bin zu faul)
@@ -30,10 +35,10 @@ use <Thread_Library.scad> //Import a Thread-Thread_Library // Only needed for Dr
 //Modifieable
 //Viewable Definition
   //Printmode (for Part-Export of Structure in STL e.c.t)
-  printmode = true;
+  printmode = false;
   usemembran = true; //Needed for Printing difficult Areas (Do not Print without this Function = true)
   membranthick = 1; //Thickness of the Membran-Layer 
-  
+
   //Print Parts Logic - printmode = true; <-- is needed
   //These Commands will be used outside of this File //TODO - Not ready jet
 
@@ -67,6 +72,9 @@ use <Thread_Library.scad> //Import a Thread-Thread_Library // Only needed for Dr
   printpenh = false; // Print Pen Holder (Print 1x for Drawing)
     printpend = 10.4; // Pen Hole Diameter
     printpendh = 30; // Pen Dome Height
+  printproxxonh = true;
+    printproxxoncd = 20.5; // Proxxon Multimot Clamp Diameter
+    printproxxonch = 10+7; // Proxxon Multimot Clamp Height
   printledh = false; // Print LED Holder (Print 1x for Lightening Workspace Area Values for ALUSTAR110 350ma 9008003)
     printleda = 35; // Lightening Angle
     printledsd = 26; // Mounting Screw Distance (between the two mounting holes)
@@ -86,7 +94,7 @@ use <Thread_Library.scad> //Import a Thread-Thread_Library // Only needed for Dr
   printufbses = false; //Print Upper-Frame bottom Emergency-Stop Structure (Print 2x, if Emergency-Stop needed)
   printufb1 = false; //Print Upper-Frame Bracer 1 (Print 1x)
   printufb2 = false; //Print Upper-Frame Bracer 2 (Print 2x)
-  printufb3 = true; //Print Upper-Frame Bracer 3 (Print 1x)
+  printufb3 = false; //Print Upper-Frame Bracer 3 (Print 1x)
   printufb4 = false; //Print Upper-Frame Bracer 4 (Print 1x)
   printufb5 = false; //Print Upper-Frame Bracer Sideways 1 (Print 8x)
   printcc1 = false; //Print Cable Clamps 1 (on Nema-Engine) (Print 2x)
@@ -105,7 +113,7 @@ use <Thread_Library.scad> //Import a Thread-Thread_Library // Only needed for Dr
   showxcarrier = true; //Show X Carrier
   showxtoolcarrier = true; //Show X Tool-Carrier
   showupperframe = true; //Show Upper-Frame Structures
-  
+
   //Simulation Sizes (take no effect in printmode = true)
   //Size for simulated Pulley on X-Axis Engine
   spoxaw = 7; //Width
@@ -117,7 +125,7 @@ use <Thread_Library.scad> //Import a Thread-Thread_Library // Only needed for Dr
     wedse = 24; //Lenght of Back Shaft
   wess = 48; //Width for simulated Engine Single Shaft
     wesss = 24; //Shaft Lenght
-  
+
   //Simulation Parameter - virtual drive the Tool-Carrier (take no effect in printmode = true)
   drivex = 50; //Drive X (Value 0-100)
   drivey = 50; //Drive Y (Value 0-100)
@@ -175,7 +183,7 @@ dbge = 8.5;//Distance Between Groundframe Feed for Engine-Structures
     ybga = 27.5; //Y-Axis Bearing Groundframe Hole Place (Space from Top to Buttom for the Bearing Screw to Mount Bearing on Structure) Warning: Relatet to the center of the Screw!
     ybgh = 8; //Y-Axis Bearing Groundframe Hole Diameter (Diameter of the Bearing Screw Hole)
     yabh = 1.38; //Y-Axis Belt Hight
-    
+
     //Y-Axis Stepper-Engine Structures
     yess = 10; //Y-Axis Engine Structure, Space between the two ThreadedRod Holders (Space for the Belt)
     yesw = 10; //Y-Axis Engine Structure, Width of ThreadedRod Holder (Normaly like "gffs") (two parts entirely)
@@ -186,7 +194,7 @@ dbge = 8.5;//Distance Between Groundframe Feed for Engine-Structures
     yeset = 7.7; //Y-Axis Engine Structure, Distance between the Top and the Stepper-Engine Mounting Spot
     yeseh = 4; //Y-Axis Engine Structure, Diameter of the Stepper-Engine Screw Holes
     yesehs = 31; //Y-Axis Engine Structure, Distance between the Scew-Holes Warning: Relatet to the center of the Screws!
-    
+
     //Y-Axis Smooth-Rod Holder (Y-Axis Smooth Rods are fixed here)
     yasrh = 10; //Hight of Smooth-Rod above the Size of the Groundframe Feeds (Height of the whole Base-Structure) (usualy gffh)
     yahoc = 10; //Hight of Smooth-Rod Clip (for tightening)
@@ -194,7 +202,7 @@ dbge = 8.5;//Distance Between Groundframe Feed for Engine-Structures
     yasosr = 10; //Size of Smooth-Rod
     yasosh = 4; //Size of Screw-Hole
     yadbsrant = 10; //Distance between Smooth-Rod and Nut Trap, Warning: Relatet to the center of the rod!
-    
+
       //Z-Axis Structure
       zasw = 110; //Z-Axis Structure Width
       zasl = 40; //Z-Axis Structure Length
@@ -226,7 +234,7 @@ dbge = 8.5;//Distance Between Groundframe Feed for Engine-Structures
       yabtl = 50; //Y-Axis Belt Tightener Lenght
       yabtsw = 4; //Y-Axis Belt Tightener Scew-Width (for Tightening the Belt)
       yabtass = 2.4; //Y-Axis Belt Tightener Allen Screw Size
-      
+
 	//X-Axis Structure
 	xacsh = 20; //X-Axis Carrier Structure Hight
 	zawolb = 19.6; //Z-Axis Width of Linear Bearing
@@ -889,7 +897,7 @@ xabspfto = (-(xawotc-xadbttsr-xawolbh)/2-xawobt/2)+(zasw-xammpt-xaamm-xawwt/2-(x
       }
     }
   }
-  
+
     //Tooldremel
     module tooldremel(trp, testprint) { //Tool - Plate to Mount a Dremel on it // Threaded Rod Pitch, Test-Print
 	  difference() {
@@ -926,7 +934,7 @@ xabspfto = (-(xawotc-xadbttsr-xawolbh)/2-xawobt/2)+(zasw-xammpt-xaamm-xawwt/2-(x
 		  }
 	  }
     }
-    
+
     //Toolpen
     module toolpen(pendomedia, pendomeheight) { //Tool - Plate to Mount a Dremel on it // Pen Diameter, Pen-Dome-Hight, Test-Print
 	  difference() {
@@ -947,7 +955,33 @@ xabspfto = (-(xawotc-xadbttsr-xawolbh)/2-xawobt/2)+(zasw-xammpt-xaamm-xawwt/2-(x
 		  }
 	  }
     }
-    
+
+    //Toolproxxon
+    module toolproxxon(clampdia, clampheight) { //Tool - Plate to Mount a Proxxon Multimot on it // Proxxon Multimot Clamp-Diameter, Proxxon Multimot Clamp-Height
+	  difference() {
+		  union() {
+			translate([-48, -12, 1]) minkowski() {
+				cube([xashdpt+10,xashdpt+10,2], center = true);
+				translate([48,12,1]) cylinder(r=2, h=2, center = true, $fn=30);
+			}
+			translate([0,0,0]) cylinder(r=12, h=clampheight);
+                        translate([0,0,clampheight]) cylinder(r1=12, r2=10, h=5);
+		  }
+		  union() {
+			translate([0,0,5]) cylinder (h = clampheight-5, r = clampdia/2); // Clamp-Hole
+			translate([0,0,clampheight]) cylinder(r1=clampdia/2, d2=12, h=5); // Clamp-Cone
+                        translate([0,0,-1]) cylinder(d1=clampdia+2, d2=clampdia, h=6); // Clamp-Cone
+			translate([0,0,clampheight+5]) cylinder(d=12, h=1); // Cut-Out
+			translate([clampdia/2-1.5,-8.5/2,-1]) cube ( size = [8.5,8.5,5]); // Pushbutton-Slot
+			translate([clampdia/2-1.5,0,4]) rotate ([0,90,0]) cylinder ( d = 8.5, h = 8.5); // Pushbutton-Slot
+			translate ([xashdpt/2,xashdpt/2,-1]) rotate ([0,0,90]) cylinder (h = 7, r = xathsimp/2+0.25); //Screw Hole for Sek.-Tool 2
+			translate ([xashdpt/2,-xashdpt/2,-1]) rotate ([0,0,90]) cylinder (h = 7, r = xathsimp/2+0.25); //Screw Hole for Sek.-Tool 2
+			translate ([-xashdpt/2,xashdpt/2,-1]) rotate ([0,0,90]) cylinder (h = 7, r = xathsimp/2+0.25); //Screw Hole for Sek.-Tool 2
+			translate ([-xashdpt/2,-xashdpt/2,-1]) rotate ([0,0,90]) cylinder (h = 7, r = xathsimp/2+0.25); //Screw Hole for Sek.-Tool 2
+		  }
+	  }
+    }
+
     //X-Axis Tool Carrier Servo Holder / flip (bolean) arround x, rotate arround x, Servo-Width, Servo-Lenght, Servo-Lenght Widhout Screwholes, Servo-Flange Depht (Dept of Servo beneath the Mounting-Flange), Position of Drive-Shaft, Servo Structure Thickness, Servo Position Offset (Position of Servo-Engine beneath Tool-Carrier Surface), Diameter of Drive-Shaft (Width Tightener on Top), Distance of Servo Screws (from the Outside), Diameter of Servo Screw Holes (For Fix Servo), additional tools mounting plug size, additional tools mounting plug distance, additional tools mounting plug position from the outside, Trigger-Flag Lenght, Trigger-Flag Width, Trigger Width, Trigger Height, Trigger Mounting Holes Distance, Trigger Mounting Holes Size (For Fix Trigger), Trigger Mounting Holes Position from Pins, Printmode (1 = Just Servo-Engine-Holder; 2 = Just Flag)
     module xtcsh(flipx, rotate, sw, sl, slws, sfd, spos, sst, spo, sdods, sdoss, sdossh, atmps, atmpd, atmpp, tfl, tfw, tw, th, tmhd, tmhs, tmhpfp, pm) {
       mirror ([flipx,0,0]) rotate ([rotate,0,0]) {
@@ -1245,7 +1279,7 @@ xabspfto = (-(xawotc-xadbttsr-xawolbh)/2-xawobt/2)+(zasw-xammpt-xaamm-xawwt/2-(x
       }
     }
     //Upper Frame bottom Structure Bracer Sideways / flip (bolean) arround y, flip (bolean) arround y, rotate arround z, Width of Bracer, Lenght of Bracer, Support Structure, Diameter of Threaded Rod, Nut Size, Sharpening Threaded Rod Holder, Direction where threaded Rod is pointed to
-    module ufbss (flipx, flipy, rotate, width, lenght, ss, dotr, ns, strh, direction) { 
+    module ufbss (flipx, flipy, rotate, width, lenght, ss, dotr, ns, strh, direction) {
       mirror ([flipx,flipy,0]) rotate ([rotate,direction,0]) {
 	difference () {
 	  union () {
@@ -1729,24 +1763,29 @@ if (printmode == false) { //Only if Printmode is OFF
 	translate ([0,xaatmpd+xaatmps+20,0]) xtcbt(0,0,xawobt,xahob,xapob,xaatmpd,xaatmps,xashd,xappt,1); //Place right Belt-Tightener
       }
     }
-    
+
     //Dremel Holder
     if (printdremelh == true && printmode == true) {
       rotate([180,0,0]) tooldremel(printdremelhp1, "false");
     }
-    
+
     //Dremel Holder Test-Objects
     if (printdremelht == true && printmode == true) {
       tooldremel(printdremelhp1, "true");
       translate ([30,0,0]) tooldremel(printdremelhp2, "true");
       translate ([60,0,0]) tooldremel(printdremelhp3, "true");
     }
-    
+
     //Pen Holder
     if (printpenh == true && printmode == true) {
       toolpen(printpend, printpendh, "false");
     }
-    
+
+    //Proxxon Holder
+    if (printproxxonh == true && printmode == true) {
+      toolproxxon(printproxxoncd, printproxxonch);
+    }
+
     //Auto-Bed-Leveling Structure
     if (printautoblvl == true && printmode == true) {
       rotate ([0,180,0]) xtcsh(0, 0, xasw, xasl, xaslws, xasfd, xaspos, xasst, xaspo, xasdods, xasdoss, xasdossh, xaatmps, xaatmpd, xaatmpp, xatfl, xatfw, xatw, xath, xatmhd, xatmhs, xatmhpfp, 1); //Place Auto-Bed-Leveling Structure
@@ -1916,7 +1955,7 @@ if (printmode == false) { //Only if Printmode is OFF
       translate ([zawon*2+printtestsizesd,0,0]) { //Print Threaded Rod Shaft (Groundframe Feeds for example)
 	difference () { 
 	  cube (size = [gffs,gffs,printtestsizesh]);
-	  translate ([gffs/2,gffs/2,-1]) cylinder (r = dotr/2+dotra/2, h = printtestsizesh+2); //Nut-Trap
+	  translate ([gffs/2,gffs/2,-1]) cylinder (r = dotr/2+dotra/2, h = printtestsizesh+2); //Threaded Rod 
 	}
       }
       translate ([zawon*2+gffs+printtestsizesd*2,0,printtestsizesd]) { //Print Threaded Rod Shaft (Groundframe Feeds for example)
